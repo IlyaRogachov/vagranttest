@@ -1,0 +1,40 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>#!/bin/bash
+for i in $(cat /home/vagrant/hostsfile/hosts |grep &quot;node[[:digit:]]&quot; |awk {&apos;print $1&apos;}) 
+  do scp -oStrictHostKeyChecking=no -i ~/.ssh/server_ca /var/lib/jenkins/workspace/Build/target/HelloWorld*.jar vagrant@$i:/tmp;
+  scp -oStrictHostKeyChecking=no -i ~/.ssh/server_ca /var/lib/jenkins/jobs/Build/workspace/target/HelloWorld*.jar vagrant@$i:/tmp;
+  ssh -oStrictHostKeyChecking=no -i ~/.ssh/server_ca vagrant@$i &apos;/bin/bash /home/vagrant/runs.sh &lt;/dev/null &amp;&gt; /dev/null &amp;&apos;;
+  f=&quot;0&quot;
+  while [ $f -lt 1 ]
+   do
+    sleep 2s
+    netcat -z -v $i 8080  2&gt;&amp;1 |grep succ
+    if [ $? -eq 0 ]
+     then
+      echo &quot;Application is runing&quot;
+      f=$[$f+1]
+      break
+    else
+     echo &apos;We are waiting for connection&apos;
+    fi
+   done
+done</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

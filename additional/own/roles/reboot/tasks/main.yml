@@ -1,0 +1,4 @@
+- name: REBOOT
+  shell: reboot
+  args:
+    executable: /bin/bash

@@ -1,0 +1,5 @@
+- hosts: all 
+  user: root
+  sudo: yes
+  roles:
+         - dockerrepo

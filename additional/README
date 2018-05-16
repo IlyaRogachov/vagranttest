@@ -1,0 +1,27 @@
+This very very simple example how to run application using kubernetes
+Stack has run.sh script for full installation of system to virtualbox vm's
+---------------------------------------
+ansible --version
+ansible 2.3.1.0
+-------------------------------------------
+
+In this case has been used:
+
+Ansible
+Jenkins (admin/admin)
+Kubernetes
+Docker
+
+--------------------------------------------------------------------------
+
+Into jenkins has been created build/deploy job.
+Deploy job builds docker image and push it to docker repository
+with ssl connection after that it makes deploy using "helm"
+on master node of kubernetes cluster
+
+This installation contain few ansible steps:
+
+1) own - role need to anable ip forwading and reboot system
+2) kargo - role need to install cluster and install all kubernetes services like: etcd, kubectl etc
+3) dockerrepo - role need to install and run docker repository wiht ssl keys
+4) jenkinsans - role need to install jenkins, plugins and jobs

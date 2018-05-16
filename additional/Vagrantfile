@@ -1,0 +1,69 @@
+BOX_IMAGE = "bento/ubuntu-16.04"
+NODE_COUNT = 3
+Vagrant.configure("2") do |config|
+  config.vm.define "master.local" do |subconfig|
+    subconfig.vm.box = BOX_IMAGE
+    subconfig.vm.hostname = "master.local"
+    subconfig.vm.provision "shell", inline: "swapoff -a"
+    subconfig.vm.provision "shell", inline: "sudo sed -i '/ swap / s/^/#/' /etc/fstab"
+    subconfig.vm.network :private_network, ip: "192.168.56.81"
+    config.vm.provider :virtualbox do |vb|
+         vb.memory = "2000"
+         vb.cpus = 2
+    end
+    subconfig.vm.provision "file", source: "./templates/server_ca.pub", destination: "~/.ssh/authorized_keys"
+    subconfig.vm.provision "file", source: "./templates/server_ca", destination: "/home/vagrant/server_ca"
+#    subconfig.vm.synced_folder  "./helms", "/home/helms"
+    subconfig.vm.provision "shell", inline: <<-SHELL
+#    sudo sed -i '/ swap / s/^/#/' /etc/fstab
+    sudo mkdir /root/.ssh
+    sudo chmod 700 /root/.ssh
+    sudo cp /home/vagrant/.ssh/authorized_keys /root/.ssh/
+    sudo apt-get update
+    sudo apt-get -y install ntp
+    SHELL
+  end
+  (1..NODE_COUNT).each do |i|
+    config.vm.define "node#{i}.local" do |subconfig|
+      subconfig.vm.box = BOX_IMAGE
+      subconfig.vm.hostname = "node#{i}.local"
+      subconfig.vm.network :private_network, ip: "192.168.56.#{i + 81}"
+      config.vm.provider :virtualbox do |vb|
+          vb.memory = "2000"
+#          vb.cpus = 2
+      end
+      subconfig.vm.provision "file", source: "./templates/server_ca.pub", destination: "~/.ssh/authorized_keys"
+      subconfig.vm.provision "file", source: "./templates/server_ca", destination: "/home/vagrant/server_ca"
+      subconfig.vm.provision "shell", inline: <<-SHELL
+      sudo sed -i '/ swap / s/^/#/' /etc/fstab
+      sudo mkdir /root/.ssh
+      sudo chmod 700 /root/.ssh
+      sudo cp /home/vagrant/.ssh/authorized_keys /root/.ssh/
+      sudo apt-get update
+      sudo apt-get -y install ntp
+      SHELL
+    end
+  end
+    config.vm.define "node4.local" do |subconfig|
+    subconfig.vm.box = BOX_IMAGE
+    subconfig.vm.hostname = "node5.local"
+    subconfig.vm.provision "shell", inline: "swapoff -a"
+    subconfig.vm.provision "shell", inline: "sudo sed -i '/ swap / s/^/#/' /etc/fstab"
+    subconfig.vm.network :private_network, ip: "192.168.56.85"
+    config.vm.provider :virtualbox do |vb|
+         vb.memory = "2000"
+#         vb.cpus = 2
+    end
+    subconfig.vm.provision "file", source: "./templates/server_ca.pub", destination: "~/.ssh/authorized_keys"
+    subconfig.vm.provision "file", source: "./templates/server_ca", destination: "/home/vagrant/server_ca"
+#    subconfig.vm.synced_folder  "./helms", "/home/helms"
+    subconfig.vm.provision "shell", inline: <<-SHELL
+#    sudo sed -i '/ swap / s/^/#/' /etc/fstab
+    sudo mkdir /root/.ssh
+    sudo chmod 700 /root/.ssh
+    sudo cp /home/vagrant/.ssh/authorized_keys /root/.ssh/
+    sudo apt-get update
+    sudo apt-get -y install ntp
+    SHELL
+  end
+ end

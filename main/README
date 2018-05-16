@@ -1,0 +1,60 @@
+
+Main part of task with logging.
+Stack has run.sh script for full installation of system to virtualbox vm's
+All vm's can be removed using "vagrant destroy $(vagrant status | grep vmware_fusion | grep -v "not created" | awk "{ print \$1 }")" command
+which should be runned on Vagrantfile directory
+
+----------------------------------------------------
+
+Versions and system used for run:
+
+Ubuntu 17.10
+
+VBoxManage --version
+5.1.34_Ubuntur121010
+
+vagrant -v
+Vagrant 2.0.4
+
+---------------------------------------------------
+
+/etc/hosts file should present records for domains
+
+192.168.56.62 hello-world.com
+192.168.56.62 kibana.hello-world.com
+192.168.56.62 jenkins.hello-world.com
+
+------------------------------------------------
+
+hello-world.com - main domain of application
+ 
+jenkins.hello-world.com  - jenkins ( Jenkins has already created build, deploy jobs and installed plugins. In a case jenkins would ask finish registration you need just copy secret key from server.
+You do not need to install jenkins plugins, just select "none plugins" and skip this step )
+
+kibana.hello-world.com - domain for ELK access (After first deploy into jenkins, when some logs will be sent into Elasticsearch. In UI you need add Index, click at Management - Index Pattern - add "hello*" click "Next Step" into Time Filter set "@timestamp" and click "Create index pattern". After that in Discover section you will be able to see logs)
+
+Into Vagrantfile file possible to change number of backend instances using variable
+ 
+NODE_COUNT
+
+new nodes will be added to nginx.conf, to jenkins deploy job and to puppet cluster 
+
+------------------------------------------------------------------------------------
+
+If you would like to have ssh server access, you might use
+./templates/server_ca key with vagrant user
+
+First part of task contains:
+
+Puppet
+Jenkins
+ELK + Filebeat
+Nginx
+
+Default configuration IPs:
+192.168.56.44 puppet.local
+192.168.56.60 jenkins-192.168.56.60.local
+192.168.56.61 kibana-192.168.56.61.local
+192.168.56.62 nginx-192.168.56.62.local
+192.168.56.51 node1-192.168.56.51.local
+192.168.56.52 node2-192.168.56.52.local

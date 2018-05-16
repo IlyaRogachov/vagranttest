@@ -1,0 +1,4 @@
+imageRegistry: "myreg.com:5000/hello"
+dockerTag: "1"
+pullPolicy: "Always"
+namefromvalue: "hello"

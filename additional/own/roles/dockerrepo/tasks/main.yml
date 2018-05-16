@@ -1,0 +1,50 @@
+- name: Creates directory Build
+  file:
+    path: /certs
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- copy:
+    src: "{{ role_path }}/files/domain.crt"
+    dest: /certs/domain.crt
+    owner: root
+    group: root
+    mode: 0755
+
+- copy:
+    src: "{{ role_path }}/files/domain.key"
+    dest: /certs/domain.key      
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Docker dir cert
+  file:
+    path: /etc/docker/certs.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+
+- name: Docker cert
+  file:
+    path: /etc/docker/certs.d/myreg.com:5000
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- copy:
+    src: "{{ role_path }}/files/domain.crt"
+    dest: /etc/docker/certs.d/myreg.com:5000/ca.crt
+    owner: root
+    group: root
+    mode: 0755
+
+- name: add hosts
+  shell: |
+        echo 192.168.56.81   myreg.com >> /etc/hosts
+

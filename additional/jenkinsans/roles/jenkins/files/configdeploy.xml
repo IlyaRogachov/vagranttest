@@ -1,0 +1,31 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>#!/bin/bash
+sudo rm -rf /home/docker/repo/HelloWorld*.jar
+sudo cp /var/lib/jenkins/workspace/Build/target/HelloWorld*.jar /home/docker/repo/
+sudo docker build --no-cache -t hello/world /home/docker/repo/
+sudo  docker tag hello/world myreg.com:5000/hello:1
+sudo  docker push myreg.com:5000/hello:1
+ssh -o StrictHostKeyChecking=no -i ~/server_ca vagrant@192.168.56.81 &lt;&lt; EOF
+sudo  helm delete helloworld --purge
+sudo  helm install /home/helm/helloworld/. --name=helloworld
+EOF
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

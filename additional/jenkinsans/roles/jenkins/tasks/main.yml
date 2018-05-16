@@ -1,0 +1,195 @@
+- name: add key
+  shell: |
+       wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -
+
+- name: add repo
+  shell: |
+    echo deb http://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list
+
+- name: add docker key
+  shell: |
+       wget -q -O - https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+- name: add docker repo
+  shell: |
+       echo deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable | sudo tee /etc/apt/sources.list.d/docker.list
+
+- name: Update apt
+  shell: |
+    apt-get update
+
+- name: Jenkins install
+  apt:
+    name: jenkins
+    state: latest
+
+- pause:
+    minutes: 1
+
+- name: Docker install
+  apt:
+    name: docker-ce
+    state: latest
+
+- name: Download file and force basic auth
+  get_url:
+    url: http://127.0.0.1:8080/jnlpJars/jenkins-cli.jar
+    dest: /home/jenkins-cli.jar
+    force_basic_auth: yes
+
+
+- name: add user admin
+  shell: |
+      cd /home && pass=`sudo cat /var/lib/jenkins/secrets/initialAdminPassword` && echo 'jenkins.model.Jenkins.instance.securityRealm.createAccount("admin", "admin")' | sudo java -jar jenkins-cli.jar -auth admin:$pass -s http://localhost:8080/ groovy =
+  ignore_errors: yes
+
+- copy:
+    src: "{{ role_path }}/files/fileplug"
+    dest: /home/fileplug
+    owner: root
+    group: root
+    mode: 0644
+
+- copy:
+    src: "{{ role_path }}/files/batch-install-jenkins-plugins.sh"
+    dest: /home/batch-install-jenkins-plugins.sh
+    owner: root
+    group: root
+    mode: 0755
+
+- name: install plugins
+  shell: |
+   cd /home && ./batch-install-jenkins-plugins.sh --plugins fileplug  --plugindir /var/lib/jenkins/plugins/
+
+- name: Creates directory Build
+  file:
+    path: /var/lib/jenkins/jobs/Build
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: 0775
+
+- name: Creates directory Builds
+  file:
+    path: /var/lib/jenkins/jobs/Build/build
+    state: directory
+    owner: jenkins 
+    group: jenkins 
+    mode: 0775
+
+- copy:
+    src: "{{ role_path }}/files/config.xml"
+    dest: /var/lib/jenkins/jobs/Build/config.xml
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+
+- name: Creates directory Deploy
+  file:
+    path: /var/lib/jenkins/jobs/Deploy
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: 0775
+
+- name: Creates directory Deploys
+  file:
+    path: /var/lib/jenkins/jobs/Deploy/build
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: 0775
+
+- copy:
+    src: "{{ role_path }}/files/configdeploy.xml"
+    dest: /var/lib/jenkins/jobs/Deploy/config.xml
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+
+
+- copy:
+    src: "{{ role_path }}/files/hudson.tasks.Maven.xml"
+    dest: /var/lib/jenkins/hudson.tasks.Maven.xml
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+
+- name: Restart service jenkins
+  service:
+    name: jenkins
+    state: restarted
+
+- name: add hosts
+  shell: |
+        echo 192.168.56.81   myreg.com >> /etc/hosts
+
+- copy:
+    src: "{{ role_path }}/files/daemon.json"
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Creates directory certs   
+  file:
+    path: /etc/docker/certs.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+
+- name: Creates directory repo
+  file:
+    path: /etc/docker/certs.d/myreg.com:5000
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- copy:
+    src: "{{ role_path }}/files/domain.crt"
+    dest: /etc/docker/certs.d/myreg.com:5000/ca.crt
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Creates directory dockers repo
+  file:
+    path: /home/docker
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Creates directory dockers repo
+  file:
+    path: /home/docker/repo                      
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- copy:
+    src: "{{ role_path }}/files/Dockerfile"
+    dest: /home/docker/repo/Dockerfile
+    owner: root
+    group: root
+    mode: 0644
+
+- copy:
+    src: "{{ role_path }}/files/server_ca"
+    dest: /var/lib/jenkins/server_ca
+    owner: jenkins
+    group: jenkins
+    mode: 0700
+
+- name: Restart service docker
+  service:
+    name: docker
+    state: restarted
+
+- name: add to /etc/passwd
+  shell: |
+     sudo su - && echo "jenkins ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
