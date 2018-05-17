@@ -31,6 +31,8 @@ This installation contain few ansible steps:
 3) dockerrepo - role need to install and run docker repository wiht ssl keys
 4) jenkinsans - role need to install jenkins, plugins and jobs
 
+--------------------------------------------------------------------------
+
 In a case you want to change number of replicas you need just increase variable
 
 replicas: 1
@@ -40,9 +42,17 @@ it's located into /home/helm/helloworld/templates/hello-readiness.yaml file of h
 on master server (192.168.56.81) yum able to use following commands:
 
 helml ls - global information regarding deployments
+helm upgrade "helloworld" ./helloworld/ --install   - upgrade example of new release ##from /home/helms directory (for example if you want increase replicas number without downtime replicas: 3)
+##==> v1/Pod(related)
+##NAME                    READY  STATUS             RESTARTS  AGE
+##hello-86f769b76f-5t982  0/1    ContainerCreating  0         0s
+##hello-86f769b76f-f5hvr  1/1    Running            0         19m
+##hello-86f769b76f-ghz67  0/1    ContainerCreating  0         0s
+
 
 kubectl get nodes - cluster status
 kubectl get pods  - pods status
 kubectl get services - service status
 
 kubectl describe pods hello-86f769b76f-f5hvr  (hello-86f769b76f-f5hvr - pod number from output of kubectl get pods)
+
