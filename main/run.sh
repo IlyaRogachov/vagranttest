@@ -1,4 +1,6 @@
 #!/bin/bash
+sudo sed -i  '/192.168.56.62 hello-world.com kibana.hello-world.com jenkins.hello-world.com/d' /etc/hosts
+sudo chmod 700 ./templates/server_ca
 echo 192.168.56.62 hello-world.com kibana.hello-world.com jenkins.hello-world.com >> /etc/hosts
 vagrant up
 sleep 2m

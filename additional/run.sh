@@ -1,4 +1,6 @@
 #!/bin/bash
+sudo sed -i  '/192.168.56.82 kuber.hello-world.com/d' /etc/hosts
+sudo chmod 700 ./templates/server_ca
 echo 192.168.56.82 kuber.hello-world.com >> /etc/hosts
 vagrant up
 sleep 1m
