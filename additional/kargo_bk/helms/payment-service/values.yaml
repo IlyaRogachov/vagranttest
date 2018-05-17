@@ -1,0 +1,6 @@
+imageRegistry: "keep53tgdsfqwevz.tradex.tech:5000/payment-service"
+dockerTag: "1.0"
+pullPolicy: "Always"
+namefromvalue: "payment-service"
+nodeselector: "node3"
+namespace: "production"

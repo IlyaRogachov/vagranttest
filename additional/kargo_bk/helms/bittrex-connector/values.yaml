@@ -1,0 +1,6 @@
+imageRegistry: "keep53tgdsfqwevz.tradex.tech:5000/bittrex-connector"
+dockerTag: "1.0"
+pullPolicy: "Always"
+namefromvalue: "bittrex-connector"
+nodeselector: "node2"
+namespace: "production"

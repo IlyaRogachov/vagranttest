@@ -1,0 +1,6 @@
+imageRegistry: "keep53tgdsfqwevz.tradex.tech:5000/bitfinex-connector"
+dockerTag: "1.0"
+pullPolicy: "Always"
+namefromvalue: "bitfinex-connector"
+nodeselector: "node2"
+namespace: "production"

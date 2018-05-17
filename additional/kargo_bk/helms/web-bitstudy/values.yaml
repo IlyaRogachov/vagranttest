@@ -1,0 +1,6 @@
+imageRegistry: "keep53tgdsfqwevz.tradex.tech:5000/web-manager-bitstudy"
+dockerTag: "1.2"
+pullPolicy: "Always"
+namefromvalue: "web-manager-bitstudy"
+nodeselector: "node6"
+namespace: "production"

@@ -1,0 +1,6 @@
+imageRegistry: "keep53tgdsfqwevz.tradex.tech:5000/notification-service"
+dockerTag: "1.0"
+pullPolicy: "Always"
+namefromvalue: "notification-service"
+nodeselector: "node3"
+namespace: "production"

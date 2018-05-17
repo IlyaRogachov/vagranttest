@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.namefromvalue}}
+  namespace: {{.Values.namespace}}
+  labels:
+    run: {{.Values.namefromvalue}}
+spec:
+#  externalIPs:
+#   - 192.168.56.12
+  ports:
+    # the port that this service should serve on
+    - port: 8104
+#    - port: 443
+  # label keys and values that must match in order to receive traffic for this service
+  selector:
+    run: {{.Values.namefromvalue}}

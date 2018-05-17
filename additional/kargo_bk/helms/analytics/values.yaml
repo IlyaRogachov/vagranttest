@@ -1,0 +1,6 @@
+imageRegistry: "keep53tgdsfqwevz.tradex.tech:5000/analytics"
+dockerTag: "1.0"
+pullPolicy: "Always"
+namefromvalue: "analytics"
+nodeselector: "node4"
+namespace: "production"

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-manager
+  namespace: {{.Values.namespace}}
+  labels:
+    run: web-manager
+spec:
+  externalIPs:
+   -  10.7.96.25
+  ports:
+    # the port that this service should serve on
+#    - port: 80
+    - port: 443
+  # label keys and values that must match in order to receive traffic for this service
+  selector:
+    run: web-manager

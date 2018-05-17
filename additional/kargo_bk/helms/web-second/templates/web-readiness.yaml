@@ -1,0 +1,40 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{.Values.namefromvalue}}
+  namespace: {{.Values.namespace}}
+  labels:
+    name: {{.Values.namefromvalue}}
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1        # how many pods we can add at a time
+      maxUnavailable: 0 #maxUnavailable define how many pods can be unavailable during the rolling update
+  minReadySeconds: 25
+  revisionHistoryLimit: 10
+  template:
+    metadata:
+      labels:
+        run: {{.Values.namefromvalue}}
+    spec:
+      containers:
+        - image:  {{.Values.imageRegistry}}:{{.Values.dockerTag}}
+          imagePullPolicy: {{.Values.pullPolicy}}
+          name: {{.Values.namefromvalue}}
+          readinessProbe:
+            exec:
+              command:
+              - cat
+              - /home/status
+            initialDelaySeconds: 50
+            periodSeconds: 55
+          ports:
+            - containerPort: 80
+              name: web-second
+#          command: [ "/bin/bash", "-c", "--" ]
+#          args: [ "while true; do sleep 30; done;" ]
+      nodeSelector:
+        disktype: {{.Values.nodeselector}}

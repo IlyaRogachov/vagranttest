@@ -1,0 +1,10 @@
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: logstashhost
+  namespace: {{.Values.namespace}}
+subsets:
+  - addresses:
+      - ip: 10.7.96.12
+    ports:
+      - port: 5044

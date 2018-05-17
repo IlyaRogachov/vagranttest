@@ -1,0 +1,6 @@
+imageRegistry: "keep53tgdsfqwevz.tradex.tech:5000/web-manager"
+dockerTag: "1.2"
+pullPolicy: "Always"
+namefromvalue: "web-node8"
+nodeselector: "node8"
+namespace: "production"

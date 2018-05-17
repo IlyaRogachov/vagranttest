@@ -1,0 +1,10 @@
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: redis
+  namespace: {{.Values.namespace}}
+subsets:
+  - addresses:
+      - ip: 10.7.96.11
+    ports:
+      - port: 6379

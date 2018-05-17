@@ -1,0 +1,10 @@
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: postgres
+  namespace: {{.Values.namespace}}
+subsets:
+  - addresses:
+      - ip: 209.250.243.79
+    ports:
+      - port: 5432

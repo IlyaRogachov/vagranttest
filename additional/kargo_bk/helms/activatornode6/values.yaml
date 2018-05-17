@@ -1,0 +1,6 @@
+imageRegistry: "keep53tgdsfqwevz.tradex.tech:5000/activator"
+dockerTag: "1.0"
+pullPolicy: "Always"
+namefromvalue: "activatornode6"
+nodeselector: "node6"
+namespace: "production"

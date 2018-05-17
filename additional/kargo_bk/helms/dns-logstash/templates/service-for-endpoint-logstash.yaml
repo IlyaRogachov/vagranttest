@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: logstashhost 
+  namespace: {{.Values.namespace}}
+spec:
+  ports:
+  - protocol: UDP
+    port: 5044
+    targetPort: 5044

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-manager-bitstudy
+  namespace: {{.Values.namespace}}
+  labels:
+    run: web-manager-bitstudy
+spec:
+  externalIPs:
+   -  10.7.96.31
+  ports:
+    # the port that this service should serve on
+#    - port: 80
+    - port: 443
+  # label keys and values that must match in order to receive traffic for this service
+  selector:
+    run: web-manager-bitstudy

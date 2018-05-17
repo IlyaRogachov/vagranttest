@@ -1,0 +1,6 @@
+imageRegistry: "keep53tgdsfqwevz.tradex.tech:5000/poloniex-connector"
+dockerTag: "1.0"
+pullPolicy: "Always"
+namefromvalue: "poloniex-connector"
+nodeselector: "node2"
+namespace: "production"

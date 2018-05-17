@@ -1,0 +1,6 @@
+imageRegistry: "keep53tgdsfqwevz.tradex.tech:5000/gdax-connector"
+dockerTag: "1.0"
+pullPolicy: "Always"
+namefromvalue: "gdax-connector"
+nodeselector: "node2"
+namespace: "production"
