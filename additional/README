@@ -3,12 +3,17 @@ Stack has run.sh script for full installation of system to virtualbox vm's
 ---------------------------------------
 ansible --version
 ansible 2.3.1.0
+
+------------------------------------------
+
+192.168.56.82 kuber.hello-world.com
+
 -------------------------------------------
 
 In this case has been used:
 
 Ansible
-Jenkins (admin/admin)
+Jenkins (admin/admin) 192.168.56.85:8080
 Kubernetes
 Docker
 
@@ -25,3 +30,19 @@ This installation contain few ansible steps:
 2) kargo - role need to install cluster and install all kubernetes services like: etcd, kubectl etc
 3) dockerrepo - role need to install and run docker repository wiht ssl keys
 4) jenkinsans - role need to install jenkins, plugins and jobs
+
+In a case you want to change number of replicas you need just increase variable
+
+replicas: 1
+
+it's located into /home/helm/helloworld/templates/hello-readiness.yaml file of helm config (it can be moved to global variable)
+
+on master server (192.168.56.81) yum able to use following commands:
+
+helml ls - global information regarding deployments
+
+kubectl get nodes - cluster status
+kubectl get pods  - pods status
+kubectl get services - service status
+
+kubectl describe pods hello-86f769b76f-f5hvr  (hello-86f769b76f-f5hvr - pod number from output of kubectl get pods)
