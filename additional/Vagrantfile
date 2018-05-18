@@ -8,8 +8,10 @@ Vagrant.configure("2") do |config|
     subconfig.vm.provision "shell", inline: "sudo sed -i '/ swap / s/^/#/' /etc/fstab"
     subconfig.vm.network :private_network, ip: "192.168.56.81"
     config.vm.provider :virtualbox do |vb|
-         vb.memory = "2000"
-         vb.cpus = 2
+	 vb.customize ["modifyvm", :id, "--cableconnected0", "on"]
+         vb.memory = "2048"
+#         vb.cpus = 2
+         vb.gui = true
     end
     subconfig.vm.provision "file", source: "./templates/server_ca.pub", destination: "~/.ssh/authorized_keys"
     subconfig.vm.provision "file", source: "./templates/server_ca", destination: "/home/vagrant/server_ca"
@@ -29,7 +31,9 @@ Vagrant.configure("2") do |config|
       subconfig.vm.hostname = "node#{i}.local"
       subconfig.vm.network :private_network, ip: "192.168.56.#{i + 81}"
       config.vm.provider :virtualbox do |vb|
+          vb.customize ["modifyvm", :id, "--cableconnected0", "on"]
           vb.memory = "2000"
+	  vb.gui = true
 #          vb.cpus = 2
       end
       subconfig.vm.provision "file", source: "./templates/server_ca.pub", destination: "~/.ssh/authorized_keys"
@@ -51,7 +55,9 @@ Vagrant.configure("2") do |config|
     subconfig.vm.provision "shell", inline: "sudo sed -i '/ swap / s/^/#/' /etc/fstab"
     subconfig.vm.network :private_network, ip: "192.168.56.85"
     config.vm.provider :virtualbox do |vb|
+	 vb.customize ["modifyvm", :id, "--cableconnected0", "on"]
          vb.memory = "2000"
+	 vb.gui = true
 #         vb.cpus = 2
     end
     subconfig.vm.provision "file", source: "./templates/server_ca.pub", destination: "~/.ssh/authorized_keys"
